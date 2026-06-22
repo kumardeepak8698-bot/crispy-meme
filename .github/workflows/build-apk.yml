@@ -30,6 +30,11 @@ jobs:
           mkdir -p /home/runner/DeviceCloner/app/src/main/res/layout
           mkdir -p /home/runner/DeviceCloner/app/src/main/res/values
           mkdir -p /home/runner/DeviceCloner/app/src/main/res/xml
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-hdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-mdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-xhdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-xxhdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-xxxhdpi
           mkdir -p /home/runner/DeviceCloner/gradle/wrapper
           bash build.gradle.kts
           bash settings.gradle.kts
@@ -46,8 +51,14 @@ jobs:
           bash file_paths.xml
           bash themes.xml
           bash app/build.gradle.kts
-          echo 'Files created:'
-          find /home/runner/DeviceCloner -type f | head -30
+
+      - name: Create launcher icons
+        run: |
+          sudo apt-get install -y imagemagick -q
+          for dir in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            convert -size 48x48 xc:#4CAF50 /home/runner/DeviceCloner/app/src/main/res/mipmap-${dir}/ic_launcher.png
+            convert -size 48x48 xc:#4CAF50 /home/runner/DeviceCloner/app/src/main/res/mipmap-${dir}/ic_launcher_round.png
+          done
 
       - name: Generate Gradle wrapper
         working-directory: /home/runner/DeviceCloner

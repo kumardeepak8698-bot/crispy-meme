@@ -26,11 +26,11 @@ jobs:
 
       - name: Create project structure from scripts
         run: |
-          mkdir -p ~/DeviceCloner/app/src/main/java/com/cloner/ui
-          mkdir -p ~/DeviceCloner/app/src/main/res/layout
-          mkdir -p ~/DeviceCloner/app/src/main/res/values
-          mkdir -p ~/DeviceCloner/app/src/main/res/xml
-          mkdir -p ~/DeviceCloner/gradle/wrapper
+          mkdir -p $HOME/DeviceCloner/app/src/main/java/com/cloner/ui
+          mkdir -p $HOME/DeviceCloner/app/src/main/res/layout
+          mkdir -p $HOME/DeviceCloner/app/src/main/res/values
+          mkdir -p $HOME/DeviceCloner/app/src/main/res/xml
+          mkdir -p $HOME/DeviceCloner/gradle/wrapper
           bash build.gradle.kts
           bash settings.gradle.kts
           bash gradle.properties
@@ -48,18 +48,18 @@ jobs:
           bash app/build.gradle.kts
 
       - name: Generate Gradle wrapper
-        working-directory: /root/DeviceCloner
+        working-directory: ${{ env.HOME }}/DeviceCloner
         run: gradle wrapper --gradle-version 8.9
 
       - name: Generate debug keystore
-        run: keytool -genkeypair -keystore /root/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+        run: keytool -genkeypair -keystore $HOME/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Build debug APK
-        working-directory: /root/DeviceCloner
+        working-directory: ${{ env.HOME }}/DeviceCloner
         run: ./gradlew assembleDebug
 
       - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: /root/DeviceCloner/app/build/outputs/apk/debug/*.apk
+          path: ${{ env.HOME }}/DeviceCloner/app/build/outputs/apk/debug/*.apk

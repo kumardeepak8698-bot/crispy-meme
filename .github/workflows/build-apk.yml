@@ -1,66 +1,67 @@
 name: Build Debug APK
-  on:
-    push:
-      branches: [ main ]
-    workflow_dispatch:
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - uses: actions/setup-java@v4
-          with:
-            java-version: '17'
-            distribution: 'temurin'
-        - uses: gradle/actions/setup-gradle@v4
-          with:
-            gradle-version: '8.9'
-        - name: Create dirs and run scripts
-          run: |
-            mkdir -p ~/DeviceCloner/app/src/main/java/com/cloner/ui
-            mkdir -p ~/DeviceCloner/app/src/main/res/layout
-            mkdir -p ~/DeviceCloner/app/src/main/res/values
-            mkdir -p ~/DeviceCloner/app/src/main/res/xml
-            mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-hdpi
-            mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-mdpi
-            mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xhdpi
-            mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xxhdpi
-            mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xxxhdpi
-            mkdir -p ~/DeviceCloner/gradle/wrapper ~/DeviceCloner/app
-            bash build.gradle.kts
-            bash settings.gradle.kts
-            bash gradle.properties
-            bash gradle-wrapper.properties
-            bash AndroidManifest.xml
-            bash MainActivity.kt
-            bash AppAdapter.kt
-            bash AppInfo.kt
-            bash CloneManager.kt
-            bash DeviceRandomizer.kt
-            bash activity_main.xml
-            bash file_paths.xml
-            bash themes.xml
-            bash app/build.gradle.kts
-            bash proguard-rules.pro
-        - name: Write item_app.xml
-          run: printf '%s' 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KICA8Y29tLmdvb2dsZS5hbmRyb2lkLm1hdGVyaWFsLmNhcmQuTWF0ZXJpYWxDYXJkVmlldwogICAgICB4bWxuczphbmRyb2lkPSJodHRwOi8vc2NoZW1hcy5hbmRyb2lkLmNvbS9hcGsvcmVzL2FuZHJvaWQiCiAgICAgIHhtbG5zOmFwcD0iaHR0cDovL3NjaGVtYXMuYW5kcm9pZC5jb20vYXBrL3Jlcy1hdXRvIgogICAgICBhbmRyb2lkOmxheW91dF93aWR0aD0ibWF0Y2hfcGFyZW50IgogICAgICBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIKICAgICAgYW5kcm9pZDpsYXlvdXRfbWFyZ2luPSI0ZHAiCiAgICAgIGFwcDpjYXJkQmFja2dyb3VuZENvbG9yPSIjMTYyMTNlIgogICAgICBhcHA6Y2FyZENvcm5lclJhZGl1cz0iMTJkcCIKICAgICAgYXBwOmNhcmRFbGV2YXRpb249IjRkcCIKICAgICAgYXBwOnN0cm9rZUNvbG9yPSIjMGYzNDYwIgogICAgICBhcHA6c3Ryb2tlV2lkdGg9IjFkcCIKICAgICAgYW5kcm9pZDpjbGlja2FibGU9InRydWUiCiAgICAgIGFuZHJvaWQ6Zm9jdXNhYmxlPSJ0cnVlIgogICAgICBhbmRyb2lkOmZvcmVncm91bmQ9Ij9hdHRyL3NlbGVjdGFibGVJdGVtQmFja2dyb3VuZCI+CiAgICAgIDxMaW5lYXJMYXlvdXQKICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJtYXRjaF9wYXJlbnQiCiAgICAgICAgICBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIKICAgICAgICAgIGFuZHJvaWQ6b3JpZW50YXRpb249Imhvcml6b250YWwiCiAgICAgICAgICBhbmRyb2lkOnBhZGRpbmc9IjEyZHAiCiAgICAgICAgICBhbmRyb2lkOmdyYXZpdHk9ImNlbnRlcl92ZXJ0aWNhbCI+CiAgICAgICAgICA8SW1hZ2VWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwSWNvbiIKICAgICAgICAgICAgICBhbmRyb2lkOmxheW91dF93aWR0aD0iNDhkcCIgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSI0OGRwIgogICAgICAgICAgICAgIGFuZHJvaWQ6c2NhbGVUeXBlPSJmaXRDZW50ZXIiIGFuZHJvaWQ6Y29udGVudERlc2NyaXB0aW9uPSJBcHAgSWNvbiIvPgogICAgICAgICAgPExpbmVhckxheW91dCBhbmRyb2lkOmxheW91dF93aWR0aD0iMGRwIiBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIKICAgICAgICAgICAgICBhbmRyb2lkOmxheW91dF93ZWlnaHQ9IjEiIGFuZHJvaWQ6bGF5b3V0X21hcmdpblN0YXJ0PSIxMmRwIiBhbmRyb2lkOm9yaWVudGF0aW9uPSJ2ZXJ0aWNhbCI+CiAgICAgICAgICAgICAgPFRleHRWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwTmFtZSIgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IndyYXBfY29udGVudCIKICAgICAgICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJ3cmFwX2NvbnRlbnQiIGFuZHJvaWQ6dGV4dENvbG9yPSIjZmZmZmZmIgogICAgICAgICAgICAgICAgICBhbmRyb2lkOnRleHRTaXplPSIxNnNwIiBhbmRyb2lkOnRleHRTdHlsZT0iYm9sZCIvPgogICAgICAgICAgICAgIDxUZXh0VmlldyBhbmRyb2lkOmlkPSJAK2lkL2FwcFBhY2thZ2UiIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IiBhbmRyb2lkOnRleHRDb2xvcj0iIzg4ODg4OCIKICAgICAgICAgICAgICAgICAgYW5kcm9pZDp0ZXh0U2l6ZT0iMTJzcCIgYW5kcm9pZDpsYXlvdXRfbWFyZ2luVG9wPSIyZHAiLz4KICAgICAgICAgICAgICA8VGV4dFZpZXcgYW5kcm9pZDppZD0iQCtpZC9hcHBWZXJzaW9uIiBhbmRyb2lkOmxheW91dF93aWR0aD0id3JhcF9jb250ZW50IgogICAgICAgICAgICAgICAgICBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIgYW5kcm9pZDp0ZXh0Q29sb3I9IiNlOTQ1NjAiCiAgICAgICAgICAgICAgICAgIGFuZHJvaWQ6dGV4dFNpemU9IjEyc3AiIGFuZHJvaWQ6bGF5b3V0X21hcmdpblRvcD0iMmRwIi8+CiAgICAgICAgICA8L0xpbmVhckxheW91dD4KICAgICAgICAgIDxjb20uZ29vZ2xlLmFuZHJvaWQubWF0ZXJpYWwuYnV0dG9uLk1hdGVyaWFsQnV0dG9uIGFuZHJvaWQ6aWQ9IkAraWQvY2xvbmVCdG4iCiAgICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IndyYXBfY29udGVudCIgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgICAgICAgYW5kcm9pZDp0ZXh0PSJDbG9uZSIgYW5kcm9pZDp0ZXh0Q29sb3I9IiNmZmZmZmYiIGFuZHJvaWQ6dGV4dFNpemU9IjEyc3AiCiAgICAgICAgICAgICAgYW5kcm9pZDpiYWNrZ3JvdW5kVGludD0iI2U5NDU2MCIgYXBwOmNvcm5lclJhZGl1cz0iOGRwIgogICAgICAgICAgICAgIGFuZHJvaWQ6cGFkZGluZ1RvcD0iOGRwIiBhbmRyb2lkOnBhZGRpbmdCb3R0b209IjhkcCIKICAgICAgICAgICAgICBhbmRyb2lkOnBhZGRpbmdTdGFydD0iMTZkcCIgYW5kcm9pZDpwYWRkaW5nRW5kPSIxNmRwIi8+CiAgICAgIDwvTGluZWFyTGF5b3V0PgogIDwvY29tLmdvb2dsZS5hbmRyb2lkLm1hdGVyaWFsLmNhcmQuTWF0ZXJpYWxDYXJkVmlldz4=' | base64 -d > ~/DeviceCloner/app/src/main/res/layout/item_app.xml
-        - name: Launcher icons
-          run: |
-            sudo apt-get install -y imagemagick -q
-            for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
-              convert -size 108x108 xc:#e94560 ~/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher.png
-              convert -size 108x108 xc:#e94560 ~/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher_round.png
-            done
-        - name: Gradle wrapper
-          working-directory: ~/DeviceCloner
-          run: gradle wrapper --gradle-version 8.9
-        - name: Debug keystore
-          run: keytool -genkeypair -keystore ~/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
-        - name: Build APK
-          working-directory: ~/DeviceCloner
-          run: ./gradlew assembleDebug
-        - uses: actions/upload-artifact@v4
-          with:
-            name: debug-apk
-            path: ~/DeviceCloner/app/build/outputs/apk/debug/*.apk
-  
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Create dirs and run scripts
+        run: |
+          mkdir -p ~/DeviceCloner/app/src/main/java/com/cloner/ui
+          mkdir -p ~/DeviceCloner/app/src/main/res/layout
+          mkdir -p ~/DeviceCloner/app/src/main/res/values
+          mkdir -p ~/DeviceCloner/app/src/main/res/xml
+          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-hdpi
+          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-mdpi
+          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xhdpi
+          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xxhdpi
+          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xxxhdpi
+          mkdir -p ~/DeviceCloner/gradle/wrapper ~/DeviceCloner/app
+          bash build.gradle.kts
+          bash settings.gradle.kts
+          bash gradle.properties
+          bash gradle-wrapper.properties
+          bash AndroidManifest.xml
+          bash MainActivity.kt
+          bash AppAdapter.kt
+          bash AppInfo.kt
+          bash CloneManager.kt
+          bash DeviceRandomizer.kt
+          bash activity_main.xml
+          bash file_paths.xml
+          bash themes.xml
+          bash app/build.gradle.kts
+          bash proguard-rules.pro
+      - name: Write item_app.xml
+        run: printf '%s' 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGNvbS5nb29nbGUuYW5kcm9pZC5tYXRlcmlhbC5jYXJkLk1hdGVyaWFsQ2FyZFZpZXcKICAgIHhtbG5zOmFuZHJvaWQ9Imh0dHA6Ly9zY2hlbWFzLmFuZHJvaWQuY29tL2Fway9yZXMvYW5kcm9pZCIKICAgIHhtbG5zOmFwcD0iaHR0cDovL3NjaGVtYXMuYW5kcm9pZC5jb20vYXBrL3Jlcy1hdXRvIgogICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9Im1hdGNoX3BhcmVudCIKICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgYW5kcm9pZDpsYXlvdXRfbWFyZ2luPSI0ZHAiCiAgICBhcHA6Y2FyZEJhY2tncm91bmRDb2xvcj0iIzE2MjEzZSIKICAgIGFwcDpjYXJkQ29ybmVyUmFkaXVzPSIxMmRwIgogICAgYXBwOmNhcmRFbGV2YXRpb249IjRkcCIKICAgIGFwcDpzdHJva2VDb2xvcj0iIzBmMzQ2MCIKICAgIGFwcDpzdHJva2VXaWR0aD0iMWRwIgogICAgYW5kcm9pZDpjbGlja2FibGU9InRydWUiCiAgICBhbmRyb2lkOmZvY3VzYWJsZT0idHJ1ZSIKICAgIGFuZHJvaWQ6Zm9yZWdyb3VuZD0iP2F0dHIvc2VsZWN0YWJsZUl0ZW1CYWNrZ3JvdW5kIj4KICAgIDxMaW5lYXJMYXlvdXQKICAgICAgICBhbmRyb2lkOmxheW91dF93aWR0aD0ibWF0Y2hfcGFyZW50IgogICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgIGFuZHJvaWQ6b3JpZW50YXRpb249Imhvcml6b250YWwiCiAgICAgICAgYW5kcm9pZDpwYWRkaW5nPSIxMmRwIgogICAgICAgIGFuZHJvaWQ6Z3Jhdml0eT0iY2VudGVyX3ZlcnRpY2FsIj4KICAgICAgICA8SW1hZ2VWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwSWNvbiIKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IjQ4ZHAiIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0iNDhkcCIKICAgICAgICAgICAgYW5kcm9pZDpzY2FsZVR5cGU9ImZpdENlbnRlciIgYW5kcm9pZDpjb250ZW50RGVzY3JpcHRpb249IkFwcCBJY29uIi8+CiAgICAgICAgPExpbmVhckxheW91dCBhbmRyb2lkOmxheW91dF93aWR0aD0iMGRwIiBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2VpZ2h0PSIxIiBhbmRyb2lkOmxheW91dF9tYXJnaW5TdGFydD0iMTJkcCIgYW5kcm9pZDpvcmllbnRhdGlvbj0idmVydGljYWwiPgogICAgICAgICAgICA8VGV4dFZpZXcgYW5kcm9pZDppZD0iQCtpZC9hcHBOYW1lIiBhbmRyb2lkOmxheW91dF93aWR0aD0id3JhcF9jb250ZW50IgogICAgICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJ3cmFwX2NvbnRlbnQiIGFuZHJvaWQ6dGV4dENvbG9yPSIjZmZmZmZmIgogICAgICAgICAgICAgICAgYW5kcm9pZDp0ZXh0U2l6ZT0iMTZzcCIgYW5kcm9pZDp0ZXh0U3R5bGU9ImJvbGQiLz4KICAgICAgICAgICAgPFRleHRWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwUGFja2FnZSIgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IndyYXBfY29udGVudCIKICAgICAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IiBhbmRyb2lkOnRleHRDb2xvcj0iIzg4ODg4OCIKICAgICAgICAgICAgICAgIGFuZHJvaWQ6dGV4dFNpemU9IjEyc3AiIGFuZHJvaWQ6bGF5b3V0X21hcmdpblRvcD0iMmRwIi8+CiAgICAgICAgICAgIDxUZXh0VmlldyBhbmRyb2lkOmlkPSJAK2lkL2FwcFZlcnNpb24iIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgICAgICAgICBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIgYW5kcm9pZDp0ZXh0Q29sb3I9IiNlOTQ1NjAiCiAgICAgICAgICAgICAgICBhbmRyb2lkOnRleHRTaXplPSIxMnNwIiBhbmRyb2lkOmxheW91dF9tYXJnaW5Ub3A9IjJkcCIvPgogICAgICAgIDwvTGluZWFyTGF5b3V0PgogICAgICAgIDxjb20uZ29vZ2xlLmFuZHJvaWQubWF0ZXJpYWwuYnV0dG9uLk1hdGVyaWFsQnV0dG9uIGFuZHJvaWQ6aWQ9IkAraWQvY2xvbmVCdG4iCiAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgICAgICBhbmRyb2lkOnRleHQ9IkNsb25lIiBhbmRyb2lkOnRleHRDb2xvcj0iI2ZmZmZmZiIgYW5kcm9pZDp0ZXh0U2l6ZT0iMTJzcCIKICAgICAgICAgICAgYW5kcm9pZDpiYWNrZ3JvdW5kVGludD0iI2U5NDU2MCIgYXBwOmNvcm5lclJhZGl1cz0iOGRwIgogICAgICAgICAgICBhbmRyb2lkOnBhZGRpbmdUb3A9IjhkcCIgYW5kcm9pZDpwYWRkaW5nQm90dG9tPSI4ZHAiCiAgICAgICAgICAgIGFuZHJvaWQ6cGFkZGluZ1N0YXJ0PSIxNmRwIiBhbmRyb2lkOnBhZGRpbmdFbmQ9IjE2ZHAiLz4KICAgIDwvTGluZWFyTGF5b3V0Pgo8L2NvbS5nb29nbGUuYW5kcm9pZC5tYXRlcmlhbC5jYXJkLk1hdGVyaWFsQ2FyZFZpZXc+' | base64 -d > ~/DeviceCloner/app/src/main/res/layout/item_app.xml
+      - name: Launcher icons
+        run: |
+          sudo apt-get install -y imagemagick -q
+          for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            convert -size 108x108 xc:#e94560 ~/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher.png
+            convert -size 108x108 xc:#e94560 ~/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher_round.png
+          done
+      - name: Gradle wrapper
+        working-directory: ~/DeviceCloner
+        run: gradle wrapper --gradle-version 8.9
+      - name: Debug keystore
+        run: keytool -genkeypair -keystore ~/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+      - name: Build APK
+        working-directory: ~/DeviceCloner
+        run: ./gradlew assembleDebug
+      - uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: ~/DeviceCloner/app/build/outputs/apk/debug/*.apk

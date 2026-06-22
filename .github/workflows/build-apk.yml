@@ -1,0 +1,65 @@
+name: Build Debug APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Create project structure from scripts
+        run: |
+          mkdir -p ~/DeviceCloner/app/src/main/java/com/cloner/ui
+          mkdir -p ~/DeviceCloner/app/src/main/res/layout
+          mkdir -p ~/DeviceCloner/app/src/main/res/values
+          mkdir -p ~/DeviceCloner/app/src/main/res/xml
+          mkdir -p ~/DeviceCloner/gradle/wrapper
+          bash build.gradle.kts
+          bash settings.gradle.kts
+          bash gradle.properties
+          bash gradle-wrapper.properties
+          bash AndroidManifest.xml
+          bash MainActivity.kt
+          bash AppAdapter.kt
+          bash AppInfo.kt
+          bash CloneManager.kt
+          bash DeviceRandomizer.kt
+          bash activity_main.xml
+          bash item_app.xml
+          bash file_paths.xml
+          bash themes.xml
+          bash app/build.gradle.kts
+
+      - name: Generate Gradle wrapper
+        working-directory: /root/DeviceCloner
+        run: gradle wrapper --gradle-version 8.9
+
+      - name: Generate debug keystore
+        run: keytool -genkeypair -keystore /root/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+
+      - name: Build debug APK
+        working-directory: /root/DeviceCloner
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: debug-apk
+          path: /root/DeviceCloner/app/build/outputs/apk/debug/*.apk

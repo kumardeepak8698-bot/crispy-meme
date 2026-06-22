@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.DeviceCloner" parent="Theme.MaterialComponents.DayNight">
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorTertiary">@color/md_theme_tertiary</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+    </style>
+
+    <color name="md_theme_primary">#006ee6</color>
+    <color name="md_theme_secondary">#00a8d8</color>
+    <color name="md_theme_tertiary">#0084ff</color>
+</resources>

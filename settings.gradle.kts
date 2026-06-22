@@ -1,4 +1,3 @@
-cat > ~/DeviceCloner/settings.gradle.kts << 'EOF'
 pluginManagement {
     repositories {
         google()
@@ -15,5 +14,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "DeviceCloner"
 include(":app")
-EOF
-echo "✅ settings.gradle.kts"

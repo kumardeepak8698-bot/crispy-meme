@@ -1,0 +1,4 @@
+-keep class com.cloner.** { *; }
+-keepclassmembers class com.cloner.** { *; }
+-dontwarn com.cloner.**
+-keepattributes SourceFile,LineNumberTable

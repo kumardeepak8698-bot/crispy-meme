@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.cloner.R
+import com.cloner.devicecloner.R
 
 class AppAdapter(
     private val onCloneClick: (AppInfo) -> Unit

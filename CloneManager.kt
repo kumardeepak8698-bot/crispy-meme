@@ -57,7 +57,7 @@ class CloneManager(private val context: Context) {
         return apps.sortedBy { it.appName }
     }
     
-    suspend fun cloneApp(packageName: String, onProgress: (String) -> Unit): CloneResult = withContext(Dispatchers.IO) {
+    suspend fun cloneApp(packageName: String, onProgress: suspend (String) -> Unit): CloneResult = withContext(Dispatchers.IO) {
         try {
             onProgress("1/8: Extracting original APK...")
             val pm = context.packageManager

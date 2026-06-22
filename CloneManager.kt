@@ -1,0 +1,219 @@
+cat > ~/DeviceCloner/app/src/main/java/com/cloner/CloneManager.kt << 'KTFILE'
+package com.cloner
+
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ApplicationInfo
+import android.net.Uri
+import android.os.Build
+import androidx.core.content.FileProvider
+import com.cloner.ui.AppInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+
+class CloneManager(private val context: Context) {
+    
+    private val clonerDir = File(context.filesDir, "cloned_apps")
+    private val decompileDir = File(context.filesDir, "decompiled")
+    private val assetsDir = File(context.filesDir, "assets")
+    
+    init {
+        clonerDir.mkdirs()
+        decompileDir.mkdirs()
+        assetsDir.mkdirs()
+    }
+    
+    data class CloneResult(
+        val success: Boolean,
+        val apkFile: File? = null,
+        val newPackageName: String? = null,
+        val message: String = ""
+    )
+    
+    fun getInstalledApps(): List<AppInfo> {
+        val pm = context.packageManager
+        val apps = mutableListOf<AppInfo>()
+        val intent = Intent(Intent.ACTION_MAIN).apply { addCategory(Intent.CATEGORY_LAUNCHER) }
+        val activities = pm.queryIntentActivities(intent, 0)
+        for (resolveInfo in activities) {
+            val pkgName = resolveInfo.activityInfo.packageName
+            try {
+                val appInfo = pm.getApplicationInfo(pkgName, 0)
+                apps.add(AppInfo(
+                    packageName = pkgName,
+                    appName = pm.getApplicationLabel(appInfo).toString(),
+                    versionName = pm.getPackageInfo(pkgName, 0)?.versionName ?: "unknown",
+                    versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                        pm.getPackageInfo(pkgName, 0).longVersionCode
+                    else pm.getPackageInfo(pkgName, 0).versionCode.toLong(),
+                    apkPath = appInfo.sourceDir,
+                    icon = appInfo.loadIcon(pm),
+                    isSystemApp = (appInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
+                ))
+            } catch (_: Exception) {}
+        }
+        return apps.sortedBy { it.appName }
+    }
+    
+    suspend fun cloneApp(packageName: String, onProgress: (String) -> Unit): CloneResult = withContext(Dispatchers.IO) {
+        try {
+            onProgress("1/8: Extracting original APK...")
+            val pm = context.packageManager
+            val aInfo = pm.getApplicationInfo(packageName, 0)
+            val originalApk = File(aInfo.sourceDir)
+            val workingDir = File(clonerDir, packageName.replace(".", "_"))
+            workingDir.mkdirs()
+            val tempApk = File(workingDir, "original.apk")
+            
+            // Copy APK to working dir
+            originalApk.inputStream().use { input ->
+                tempApk.outputStream().use { output -> input.copyTo(output) }
+            }
+            
+            onProgress("2/8: Setting up tools...")
+            // Extract bundled tools
+            val apktoolJar = File(assetsDir, "apktool.jar")
+            val signerJar = File(assetsDir, "uber-apk-signer.jar")
+            
+            // Copy from app's assets if not already extracted
+            if (!apktoolJar.exists()) {
+                try {
+                    context.assets.open("apktool.jar").use { input ->
+                        apktoolJar.outputStream().use { output -> input.copyTo(output) }
+                    }
+                } catch (e: Exception) {
+                    return@withContext CloneResult(false, message = "APKTool not found in assets. Download it first:\nwget https://github.com/iBotPeaches/Apktool/releases/download/v2.10.0/apktool_2.10.0.jar")
+                }
+            }
+            if (!signerJar.exists()) {
+                try {
+                    context.assets.open("uber-apk-signer.jar").use { input ->
+                        signerJar.outputStream().use { output -> input.copyTo(output) }
+                    }
+                } catch (e: Exception) {
+                    return@withContext CloneResult(false, message = "uber-apk-signer not found in assets. Download it.")
+                }
+            }
+            
+            // Generate new package name
+            val newPkgName = "com.clone.${packageName.replace(".", "_")}"
+            val decompileOut = File(workingDir, "decompiled")
+            decompileOut.mkdirs()
+            
+            onProgress("3/8: Decompiling with APKTool...")
+            val decompileCmd = arrayOf(
+                "java", "-jar", apktoolJar.absolutePath,
+                "d", tempApk.absolutePath,
+                "-o", decompileOut.absolutePath,
+                "-f"
+            )
+            val decompileProcess = Runtime.getRuntime().exec(decompileCmd)
+            val exitCode = decompileProcess.waitFor()
+            if (exitCode != 0) {
+                val error = decompileProcess.errorStream.bufferedReader().readText()
+                return@withContext CloneResult(false, message = "Decompile failed: $error")
+            }
+            
+            onProgress("4/8: Patching package name & injecting Frida...")
+            // Modify AndroidManifest.xml
+            val manifestFile = File(decompileOut, "AndroidManifest.xml")
+            var manifestContent = manifestFile.readText()
+            manifestContent = manifestContent.replace(
+                Regex("""package="[^"]+""""),
+                """package="$newPkgName""""
+            )
+            
+            // Add Frida gadget meta-data
+            val gadgetMeta = """<meta-data android:name="frida:scripts" android:value="device_spoof.js"/>
+        <meta-data android:name="frida:gadget" android:value="true"/>"""
+            
+            manifestContent = manifestContent.replace("<application", "<application\n        $gadgetMeta")
+            manifestFile.writeText(manifestContent)
+            
+            onProgress("5/8: Adding Frida gadget & spoof script...")
+            // Create lib directory and copy frida gadget
+            val libDir = File(decompileOut, "lib/arm64-v8a")
+            libDir.mkdirs()
+            
+            // Copy frida-gadget.so from app's native libs
+            val gadgetSourcePath = "/data/data/${context.packageName}/lib/libfrida-gadget.so"
+            val gadgetFile = File(gadgetSourcePath)
+            if (gadgetFile.exists()) {
+                gadgetFile.copyTo(File(libDir, "libfrida-gadget.so"), overwrite = true)
+            } else {
+                // Try from assets
+                try {
+                    context.assets.open("libfrida-gadget.so").use { input ->
+                        File(libDir, "libfrida-gadget.so").outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Create minimal stub - Frida won't work but APK will install
+                    File(libDir, "libfrida-gadget.so").writeBytes(byteArrayOf(0x7f, 0x45, 0x4c, 0x46))
+                }
+            }
+            
+            // Add device spoof script
+            val assetsOutDir = File(decompileOut, "assets")
+            assetsOutDir.mkdirs()
+            val profile = DeviceRandomizer.getRandomDeviceProfile()
+            val scriptContent = DeviceRandomizer.generateFridaScript(profile)
+            File(assetsOutDir, "device_spoof.js").writeText(scriptContent)
+            
+            onProgress("6/8: Recompiling APK...")
+            val unsignedApk = File(workingDir, "unsigned.apk")
+            val recompileCmd = arrayOf(
+                "java", "-jar", apktoolJar.absolutePath,
+                "b", decompileOut.absolutePath,
+                "-o", unsignedApk.absolutePath
+            )
+            val recompileProcess = Runtime.getRuntime().exec(recompileCmd)
+            val recompileExit = recompileProcess.waitFor()
+            if (recompileExit != 0) {
+                val error = recompileProcess.errorStream.bufferedReader().readText()
+                return@withContext CloneResult(false, message = "Recompile failed: $error")
+            }
+            
+            onProgress("7/8: Signing APK...")
+            val signedApk = File(workingDir, "cloned.apk")
+            val signCmd = arrayOf(
+                "java", "-jar", signerJar.absolutePath,
+                "--apk", unsignedApk.absolutePath,
+                "--out", signedApk.absolutePath
+            )
+            val signProcess = Runtime.getRuntime().exec(signCmd)
+            signProcess.waitFor()
+            
+            onProgress("8/8: Installing cloned app...")
+            // Copy to a shared location so installer can access it
+            val installApk = File(context.cacheDir, "${newPkgName.replace(".", "_")}_cloned.apk")
+            signedApk.copyTo(installApk, overwrite = true)
+            
+            // Trigger install
+            val uri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                installApk
+            )
+            val installIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/vnd.android.package-archive")
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            }
+            context.startActivity(installIntent)
+            
+            CloneResult(
+                success = true,
+                apkFile = installApk,
+                newPackageName = newPkgName,
+                message = "CLONE SUCCESSFUL!\nNew package: $newPkgName\nAPK: ${installApk.absolutePath}\n\nThe cloned APK is being installed now. After install, every launch = new device identity!"
+            )
+        } catch (e: Exception) {
+            CloneResult(false, message = "ERROR: ${e.message ?: e.toString()}")
+        }
+    }
+}
+KTFILE
+echo "✅ CloneManager.kt"

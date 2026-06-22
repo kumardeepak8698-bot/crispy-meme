@@ -47,10 +47,29 @@ jobs:
           bash CloneManager.kt
           bash DeviceRandomizer.kt
           bash activity_main.xml
-          bash item_app.xml
           bash file_paths.xml
           bash themes.xml
           bash app/build.gradle.kts
+          bash proguard-rules.pro
+
+      - name: Write item_app.xml directly
+        run: |
+          python3 -c "
+          import os
+          content = open('item_app.xml').read()
+          lines = content.split('\n')
+          # find heredoc start/end
+          start = next(i for i,l in enumerate(lines) if '<<' in l) + 1
+          marker = [l for l in lines if '<<' in l][0].split()[-1].strip(\"'\")
+          end = next(i for i,l in enumerate(lines) if i > start and l.strip() == marker)
+          xml = '\n'.join(lines[start:end])
+          # Strip leading whitespace from each line while preserving structure
+          import textwrap
+          xml = textwrap.dedent(xml)
+          with open('/home/runner/DeviceCloner/app/src/main/res/layout/item_app.xml', 'w', encoding='utf-8') as f:
+              f.write(xml)
+          print('Written:', repr(xml[:50]))
+          "
 
       - name: Create launcher icons
         run: |

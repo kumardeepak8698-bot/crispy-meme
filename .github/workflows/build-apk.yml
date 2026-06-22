@@ -19,16 +19,16 @@ jobs:
           gradle-version: '8.9'
       - name: Create dirs and run scripts
         run: |
-          mkdir -p ~/DeviceCloner/app/src/main/java/com/cloner/ui
-          mkdir -p ~/DeviceCloner/app/src/main/res/layout
-          mkdir -p ~/DeviceCloner/app/src/main/res/values
-          mkdir -p ~/DeviceCloner/app/src/main/res/xml
-          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-hdpi
-          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-mdpi
-          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xhdpi
-          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xxhdpi
-          mkdir -p ~/DeviceCloner/app/src/main/res/mipmap-xxxhdpi
-          mkdir -p ~/DeviceCloner/gradle/wrapper ~/DeviceCloner/app
+          mkdir -p /home/runner/DeviceCloner/app/src/main/java/com/cloner/ui
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/layout
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/values
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/xml
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-hdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-mdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-xhdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-xxhdpi
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/mipmap-xxxhdpi
+          mkdir -p /home/runner/DeviceCloner/gradle/wrapper /home/runner/DeviceCloner/app
           bash build.gradle.kts
           bash settings.gradle.kts
           bash gradle.properties
@@ -45,23 +45,23 @@ jobs:
           bash app/build.gradle.kts
           bash proguard-rules.pro
       - name: Write item_app.xml
-        run: printf '%s' 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGNvbS5nb29nbGUuYW5kcm9pZC5tYXRlcmlhbC5jYXJkLk1hdGVyaWFsQ2FyZFZpZXcKICAgIHhtbG5zOmFuZHJvaWQ9Imh0dHA6Ly9zY2hlbWFzLmFuZHJvaWQuY29tL2Fway9yZXMvYW5kcm9pZCIKICAgIHhtbG5zOmFwcD0iaHR0cDovL3NjaGVtYXMuYW5kcm9pZC5jb20vYXBrL3Jlcy1hdXRvIgogICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9Im1hdGNoX3BhcmVudCIKICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgYW5kcm9pZDpsYXlvdXRfbWFyZ2luPSI0ZHAiCiAgICBhcHA6Y2FyZEJhY2tncm91bmRDb2xvcj0iIzE2MjEzZSIKICAgIGFwcDpjYXJkQ29ybmVyUmFkaXVzPSIxMmRwIgogICAgYXBwOmNhcmRFbGV2YXRpb249IjRkcCIKICAgIGFwcDpzdHJva2VDb2xvcj0iIzBmMzQ2MCIKICAgIGFwcDpzdHJva2VXaWR0aD0iMWRwIgogICAgYW5kcm9pZDpjbGlja2FibGU9InRydWUiCiAgICBhbmRyb2lkOmZvY3VzYWJsZT0idHJ1ZSIKICAgIGFuZHJvaWQ6Zm9yZWdyb3VuZD0iP2F0dHIvc2VsZWN0YWJsZUl0ZW1CYWNrZ3JvdW5kIj4KICAgIDxMaW5lYXJMYXlvdXQKICAgICAgICBhbmRyb2lkOmxheW91dF93aWR0aD0ibWF0Y2hfcGFyZW50IgogICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgIGFuZHJvaWQ6b3JpZW50YXRpb249Imhvcml6b250YWwiCiAgICAgICAgYW5kcm9pZDpwYWRkaW5nPSIxMmRwIgogICAgICAgIGFuZHJvaWQ6Z3Jhdml0eT0iY2VudGVyX3ZlcnRpY2FsIj4KICAgICAgICA8SW1hZ2VWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwSWNvbiIKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IjQ4ZHAiIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0iNDhkcCIKICAgICAgICAgICAgYW5kcm9pZDpzY2FsZVR5cGU9ImZpdENlbnRlciIgYW5kcm9pZDpjb250ZW50RGVzY3JpcHRpb249IkFwcCBJY29uIi8+CiAgICAgICAgPExpbmVhckxheW91dCBhbmRyb2lkOmxheW91dF93aWR0aD0iMGRwIiBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2VpZ2h0PSIxIiBhbmRyb2lkOmxheW91dF9tYXJnaW5TdGFydD0iMTJkcCIgYW5kcm9pZDpvcmllbnRhdGlvbj0idmVydGljYWwiPgogICAgICAgICAgICA8VGV4dFZpZXcgYW5kcm9pZDppZD0iQCtpZC9hcHBOYW1lIiBhbmRyb2lkOmxheW91dF93aWR0aD0id3JhcF9jb250ZW50IgogICAgICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJ3cmFwX2NvbnRlbnQiIGFuZHJvaWQ6dGV4dENvbG9yPSIjZmZmZmZmIgogICAgICAgICAgICAgICAgYW5kcm9pZDp0ZXh0U2l6ZT0iMTZzcCIgYW5kcm9pZDp0ZXh0U3R5bGU9ImJvbGQiLz4KICAgICAgICAgICAgPFRleHRWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwUGFja2FnZSIgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IndyYXBfY29udGVudCIKICAgICAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IiBhbmRyb2lkOnRleHRDb2xvcj0iIzg4ODg4OCIKICAgICAgICAgICAgICAgIGFuZHJvaWQ6dGV4dFNpemU9IjEyc3AiIGFuZHJvaWQ6bGF5b3V0X21hcmdpblRvcD0iMmRwIi8+CiAgICAgICAgICAgIDxUZXh0VmlldyBhbmRyb2lkOmlkPSJAK2lkL2FwcFZlcnNpb24iIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgICAgICAgICBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIgYW5kcm9pZDp0ZXh0Q29sb3I9IiNlOTQ1NjAiCiAgICAgICAgICAgICAgICBhbmRyb2lkOnRleHRTaXplPSIxMnNwIiBhbmRyb2lkOmxheW91dF9tYXJnaW5Ub3A9IjJkcCIvPgogICAgICAgIDwvTGluZWFyTGF5b3V0PgogICAgICAgIDxjb20uZ29vZ2xlLmFuZHJvaWQubWF0ZXJpYWwuYnV0dG9uLk1hdGVyaWFsQnV0dG9uIGFuZHJvaWQ6aWQ9IkAraWQvY2xvbmVCdG4iCiAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgICAgICBhbmRyb2lkOnRleHQ9IkNsb25lIiBhbmRyb2lkOnRleHRDb2xvcj0iI2ZmZmZmZiIgYW5kcm9pZDp0ZXh0U2l6ZT0iMTJzcCIKICAgICAgICAgICAgYW5kcm9pZDpiYWNrZ3JvdW5kVGludD0iI2U5NDU2MCIgYXBwOmNvcm5lclJhZGl1cz0iOGRwIgogICAgICAgICAgICBhbmRyb2lkOnBhZGRpbmdUb3A9IjhkcCIgYW5kcm9pZDpwYWRkaW5nQm90dG9tPSI4ZHAiCiAgICAgICAgICAgIGFuZHJvaWQ6cGFkZGluZ1N0YXJ0PSIxNmRwIiBhbmRyb2lkOnBhZGRpbmdFbmQ9IjE2ZHAiLz4KICAgIDwvTGluZWFyTGF5b3V0Pgo8L2NvbS5nb29nbGUuYW5kcm9pZC5tYXRlcmlhbC5jYXJkLk1hdGVyaWFsQ2FyZFZpZXc+' | base64 -d > ~/DeviceCloner/app/src/main/res/layout/item_app.xml
+        run: printf '%s' 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPGNvbS5nb29nbGUuYW5kcm9pZC5tYXRlcmlhbC5jYXJkLk1hdGVyaWFsQ2FyZFZpZXcKICAgIHhtbG5zOmFuZHJvaWQ9Imh0dHA6Ly9zY2hlbWFzLmFuZHJvaWQuY29tL2Fway9yZXMvYW5kcm9pZCIKICAgIHhtbG5zOmFwcD0iaHR0cDovL3NjaGVtYXMuYW5kcm9pZC5jb20vYXBrL3Jlcy1hdXRvIgogICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9Im1hdGNoX3BhcmVudCIKICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgYW5kcm9pZDpsYXlvdXRfbWFyZ2luPSI0ZHAiCiAgICBhcHA6Y2FyZEJhY2tncm91bmRDb2xvcj0iIzE2MjEzZSIKICAgIGFwcDpjYXJkQ29ybmVyUmFkaXVzPSIxMmRwIgogICAgYXBwOmNhcmRFbGV2YXRpb249IjRkcCIKICAgIGFwcDpzdHJva2VDb2xvcj0iIzBmMzQ2MCIKICAgIGFwcDpzdHJva2VXaWR0aD0iMWRwIgogICAgYW5kcm9pZDpjbGlja2FibGU9InRydWUiCiAgICBhbmRyb2lkOmZvY3VzYWJsZT0idHJ1ZSIKICAgIGFuZHJvaWQ6Zm9yZWdyb3VuZD0iP2F0dHIvc2VsZWN0YWJsZUl0ZW1CYWNrZ3JvdW5kIj4KICAgIDxMaW5lYXJMYXlvdXQKICAgICAgICBhbmRyb2lkOmxheW91dF93aWR0aD0ibWF0Y2hfcGFyZW50IgogICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgIGFuZHJvaWQ6b3JpZW50YXRpb249Imhvcml6b250YWwiCiAgICAgICAgYW5kcm9pZDpwYWRkaW5nPSIxMmRwIgogICAgICAgIGFuZHJvaWQ6Z3Jhdml0eT0iY2VudGVyX3ZlcnRpY2FsIj4KICAgICAgICA8SW1hZ2VWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwSWNvbiIKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IjQ4ZHAiIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0iNDhkcCIKICAgICAgICAgICAgYW5kcm9pZDpzY2FsZVR5cGU9ImZpdENlbnRlciIgYW5kcm9pZDpjb250ZW50RGVzY3JpcHRpb249IkFwcCBJY29uIi8+CiAgICAgICAgPExpbmVhckxheW91dCBhbmRyb2lkOmxheW91dF93aWR0aD0iMGRwIiBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2VpZ2h0PSIxIiBhbmRyb2lkOmxheW91dF9tYXJnaW5TdGFydD0iMTJkcCIgYW5kcm9pZDpvcmllbnRhdGlvbj0idmVydGljYWwiPgogICAgICAgICAgICA8VGV4dFZpZXcgYW5kcm9pZDppZD0iQCtpZC9hcHBOYW1lIiBhbmRyb2lkOmxheW91dF93aWR0aD0id3JhcF9jb250ZW50IgogICAgICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJ3cmFwX2NvbnRlbnQiIGFuZHJvaWQ6dGV4dENvbG9yPSIjZmZmZmZmIgogICAgICAgICAgICAgICAgYW5kcm9pZDp0ZXh0U2l6ZT0iMTZzcCIgYW5kcm9pZDp0ZXh0U3R5bGU9ImJvbGQiLz4KICAgICAgICAgICAgPFRleHRWaWV3IGFuZHJvaWQ6aWQ9IkAraWQvYXBwUGFja2FnZSIgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IndyYXBfY29udGVudCIKICAgICAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IiBhbmRyb2lkOnRleHRDb2xvcj0iIzg4ODg4OCIKICAgICAgICAgICAgICAgIGFuZHJvaWQ6dGV4dFNpemU9IjEyc3AiIGFuZHJvaWQ6bGF5b3V0X21hcmdpblRvcD0iMmRwIi8+CiAgICAgICAgICAgIDxUZXh0VmlldyBhbmRyb2lkOmlkPSJAK2lkL2FwcFZlcnNpb24iIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgICAgICAgICBhbmRyb2lkOmxheW91dF9oZWlnaHQ9IndyYXBfY29udGVudCIgYW5kcm9pZDp0ZXh0Q29sb3I9IiNlOTQ1NjAiCiAgICAgICAgICAgICAgICBhbmRyb2lkOnRleHRTaXplPSIxMnNwIiBhbmRyb2lkOmxheW91dF9tYXJnaW5Ub3A9IjJkcCIvPgogICAgICAgIDwvTGluZWFyTGF5b3V0PgogICAgICAgIDxjb20uZ29vZ2xlLmFuZHJvaWQubWF0ZXJpYWwuYnV0dG9uLk1hdGVyaWFsQnV0dG9uIGFuZHJvaWQ6aWQ9IkAraWQvY2xvbmVCdG4iCiAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgICAgICBhbmRyb2lkOnRleHQ9IkNsb25lIiBhbmRyb2lkOnRleHRDb2xvcj0iI2ZmZmZmZiIgYW5kcm9pZDp0ZXh0U2l6ZT0iMTJzcCIKICAgICAgICAgICAgYW5kcm9pZDpiYWNrZ3JvdW5kVGludD0iI2U5NDU2MCIgYXBwOmNvcm5lclJhZGl1cz0iOGRwIgogICAgICAgICAgICBhbmRyb2lkOnBhZGRpbmdUb3A9IjhkcCIgYW5kcm9pZDpwYWRkaW5nQm90dG9tPSI4ZHAiCiAgICAgICAgICAgIGFuZHJvaWQ6cGFkZGluZ1N0YXJ0PSIxNmRwIiBhbmRyb2lkOnBhZGRpbmdFbmQ9IjE2ZHAiLz4KICAgIDwvTGluZWFyTGF5b3V0Pgo8L2NvbS5nb29nbGUuYW5kcm9pZC5tYXRlcmlhbC5jYXJkLk1hdGVyaWFsQ2FyZFZpZXc+' | base64 -d > /home/runner/DeviceCloner/app/src/main/res/layout/item_app.xml
       - name: Launcher icons
         run: |
           sudo apt-get install -y imagemagick -q
           for d in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
-            convert -size 108x108 xc:#e94560 ~/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher.png
-            convert -size 108x108 xc:#e94560 ~/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher_round.png
+            convert -size 108x108 xc:#e94560 /home/runner/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher.png
+            convert -size 108x108 xc:#e94560 /home/runner/DeviceCloner/app/src/main/res/mipmap-${d}/ic_launcher_round.png
           done
       - name: Gradle wrapper
-        working-directory: ~/DeviceCloner
+        working-directory: /home/runner/DeviceCloner
         run: gradle wrapper --gradle-version 8.9
       - name: Debug keystore
-        run: keytool -genkeypair -keystore ~/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+        run: keytool -genkeypair -keystore /home/runner/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
       - name: Build APK
-        working-directory: ~/DeviceCloner
+        working-directory: /home/runner/DeviceCloner
         run: ./gradlew assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: ~/DeviceCloner/app/build/outputs/apk/debug/*.apk
+          path: /home/runner/DeviceCloner/app/build/outputs/apk/debug/*.apk

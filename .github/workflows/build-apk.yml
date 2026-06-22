@@ -56,8 +56,8 @@ jobs:
         run: |
           sudo apt-get install -y imagemagick -q
           for dir in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
-            convert -size 48x48 xc:#4CAF50 /home/runner/DeviceCloner/app/src/main/res/mipmap-${dir}/ic_launcher.png
-            convert -size 48x48 xc:#4CAF50 /home/runner/DeviceCloner/app/src/main/res/mipmap-${dir}/ic_launcher_round.png
+            convert -size 108x108 xc:#e94560 /home/runner/DeviceCloner/app/src/main/res/mipmap-${dir}/ic_launcher.png
+            convert -size 108x108 xc:#e94560 /home/runner/DeviceCloner/app/src/main/res/mipmap-${dir}/ic_launcher_round.png
           done
 
       - name: Generate Gradle wrapper

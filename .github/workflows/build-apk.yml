@@ -26,11 +26,11 @@ jobs:
 
       - name: Create project structure from scripts
         run: |
-          mkdir -p $HOME/DeviceCloner/app/src/main/java/com/cloner/ui
-          mkdir -p $HOME/DeviceCloner/app/src/main/res/layout
-          mkdir -p $HOME/DeviceCloner/app/src/main/res/values
-          mkdir -p $HOME/DeviceCloner/app/src/main/res/xml
-          mkdir -p $HOME/DeviceCloner/gradle/wrapper
+          mkdir -p /home/runner/DeviceCloner/app/src/main/java/com/cloner/ui
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/layout
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/values
+          mkdir -p /home/runner/DeviceCloner/app/src/main/res/xml
+          mkdir -p /home/runner/DeviceCloner/gradle/wrapper
           bash build.gradle.kts
           bash settings.gradle.kts
           bash gradle.properties
@@ -46,20 +46,22 @@ jobs:
           bash file_paths.xml
           bash themes.xml
           bash app/build.gradle.kts
+          echo 'Files created:'
+          find /home/runner/DeviceCloner -type f | head -30
 
       - name: Generate Gradle wrapper
-        working-directory: ${{ env.HOME }}/DeviceCloner
+        working-directory: /home/runner/DeviceCloner
         run: gradle wrapper --gradle-version 8.9
 
       - name: Generate debug keystore
-        run: keytool -genkeypair -keystore $HOME/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+        run: keytool -genkeypair -keystore /home/runner/DeviceCloner/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
 
       - name: Build debug APK
-        working-directory: ${{ env.HOME }}/DeviceCloner
+        working-directory: /home/runner/DeviceCloner
         run: ./gradlew assembleDebug
 
       - name: Upload APK as artifact
         uses: actions/upload-artifact@v4
         with:
           name: debug-apk
-          path: ${{ env.HOME }}/DeviceCloner/app/build/outputs/apk/debug/*.apk
+          path: /home/runner/DeviceCloner/app/build/outputs/apk/debug/*.apk

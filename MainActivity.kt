@@ -48,6 +48,11 @@ class MainActivity : AppCompatActivity() {
         requestAllPermissions()
     }
 
+
+    private fun checkPermissions(): Boolean {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) return true
+        return androidx.core.content.ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == android.content.pm.PackageManager.PERMISSION_GRANTED
+    }
     private fun requestAllPermissions() {
         val needed = mutableListOf<String>()
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)

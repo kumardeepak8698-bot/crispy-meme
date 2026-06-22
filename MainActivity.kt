@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.cloner.databinding.ActivityMainBinding
+import com.cloner.devicecloner.databinding.ActivityMainBinding
 import com.cloner.ui.AppAdapter
 import com.cloner.ui.AppInfo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder

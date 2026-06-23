@@ -21,7 +21,7 @@ cat > ~/DeviceCloner/app/src/main/AndroidManifest.xml << 'EOF'
         android:usesCleartextTraffic="true">
         
         <activity
-            android:name=".MainActivity"
+            android:name="com.cloner.MainActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
